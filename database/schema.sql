@@ -1,0 +1,61 @@
+CREATE DATABASE IF NOT EXISTS ContactManagerDB
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE ContactManagerDB;
+
+CREATE TABLE Users
+(
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+
+    UserID INT NOT NULL,
+
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
+
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    Email VARCHAR(255) NOT NULL UNIQUE,
+
+    PasswordHash VARCHAR(255) NOT NULL,
+
+    Role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
+
+    IsDisabled BOOLEAN NOT NULL DEFAULT FALSE,
+
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Contacts
+(
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+
+    UserID INT NOT NULL,
+
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
+
+    Email VARCHAR(255),
+    Phone VARCHAR(50),
+    
+    Address VARCHAR(255),
+    City VARCHAR(100),
+    State VARCHAR(100),
+    PostalCode VARCHAR(20),
+
+    Notes TEXT,
+
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP NOT NULL
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_contacts_user
+        FOREIGN KEY (UserID)
+        REFERENCES Users(ID)
+        ON DELETE CASCADE,
+
+    INDEX idx_contacts_user_name
+        (UserID, LastName, FirstName)
+);
