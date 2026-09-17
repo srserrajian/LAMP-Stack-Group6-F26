@@ -6,9 +6,7 @@ USE ContactManagerDB;
 
 CREATE TABLE Users
 (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-
-    UserID INT NOT NULL,
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
 
     FirstName VARCHAR(100) NOT NULL,
     LastName VARCHAR(100) NOT NULL,
@@ -25,11 +23,12 @@ CREATE TABLE Users
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP NOT NULL
         DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Contacts
 (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
+    ContactID INT AUTO_INCREMENT PRIMARY KEY,
 
     UserID INT NOT NULL,
 
@@ -38,7 +37,7 @@ CREATE TABLE Contacts
 
     Email VARCHAR(255),
     Phone VARCHAR(50),
-    
+
     Address VARCHAR(255),
     City VARCHAR(100),
     State VARCHAR(100),
@@ -53,7 +52,7 @@ CREATE TABLE Contacts
 
     CONSTRAINT fk_contacts_user
         FOREIGN KEY (UserID)
-        REFERENCES Users(ID)
+        REFERENCES Users(UserID)
         ON DELETE CASCADE,
 
     INDEX idx_contacts_user_name
