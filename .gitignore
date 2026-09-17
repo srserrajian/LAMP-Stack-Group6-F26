@@ -1,11 +1,19 @@
+# Secrets
 .env
 .env.*
 !.env.example
 
+# Editor files
 .vscode/
 .idea/
 
+# Logs
 *.log
 
+# Operating system junk
 .DS_Store
 Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
