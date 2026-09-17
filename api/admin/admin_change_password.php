@@ -1,8 +1,8 @@
 <?php
 //POST /admin_change_password.php
 //Body: { "user_id", "new_password" }
-require_once __DIR__ '/.../config/config.php';
-require_once __DIR__ '/.../config/helpers.php';
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../config/helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_json(['error' => 'Method not allowed'], 405);

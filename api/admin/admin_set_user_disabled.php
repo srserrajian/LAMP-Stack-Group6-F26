@@ -1,8 +1,8 @@
 <?php
 //POST /admin_set_user_disabled.php
 //Body: { "user_id", "is_disabled": true|false }
-require_once ___DIR___ '/.../config/config.php';
-require_once ___DIR___ '/.../config/helpers.php';
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../config/helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_json(['error' => 'Method not allowed'], 405);
