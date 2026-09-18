@@ -33,7 +33,7 @@ if ($user['IsDisabled']) {
 
 start_api_session();
 session_regenerate_id(true); //prevent session fixation
-$_SESSION['user_id']  = $user['UserID']
+$_SESSION['user_id']  = $user['UserID'];
 $_SESSION['username'] = $user['Username'];
 $_SESSION['role']     = $user['Role'];
 
