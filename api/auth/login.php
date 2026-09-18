@@ -33,14 +33,14 @@ if ($user['IsDisabled']) {
 
 start_api_session();
 session_regenerate_id(true); //prevent session fixation
-$_SESSION['user_id']  = $user['ID'];
+$_SESSION['user_id']  = $user['UserID']
 $_SESSION['username'] = $user['Username'];
 $_SESSION['role']     = $user['Role'];
 
 send_json([
     'message' => 'Login successful',
     'user' => [
-        'id'         => $user['ID'],
+        'id'         => $user['UserID'],
         'first_name' => $user['FirstName'],
         'last_name'  => $user['LastName'],
         'username'   => $user['Username'],

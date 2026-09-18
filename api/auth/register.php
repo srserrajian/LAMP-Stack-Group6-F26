@@ -34,7 +34,7 @@ if (strlen($password) < 8) {
 $pdo = get_db_connection();
 
 //make sure username/email aren't already taken
-$stmt = $pdo->prepare('SELECT ID FROM Users WHERE Username = ? OR Email = ?');
+$stmt = $pdo->prepare('SELECT UserID FROM Users WHERE Username = ? OR Email = ?');
 $stmt->execute([$username, $email]);
 
 if ($stmt->fetch()) {
