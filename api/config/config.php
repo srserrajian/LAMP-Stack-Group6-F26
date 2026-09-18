@@ -10,7 +10,7 @@ if (!file_exists($envFile)) {
     exit;
 }
 
-$env = parse_ini_file($envFile);
+$env = parse_ini_file($envFile, false, INI_SCANNER_RAW);
 
 define('DB_HOST', $env['DB_HOST']);
 define('DB_PORT', $env['DB_PORT']);
