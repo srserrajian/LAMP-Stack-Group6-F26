@@ -7,7 +7,7 @@ $session = require_login();
 $pdo = get_db_connection();
 
 //look up info instead of trusting the session blindly
-$stmt = $pdo->prepare('SELECT UserID, FirstName, LastName, Username, Email, Role, IsDisabled FROM Users WHERE ID = ?');
+$stmt = $pdo->prepare('SELECT UserID, FirstName, LastName, Username, Email, Role, IsDisabled FROM Users WHERE UserID = ?');
 $stmt->execute([$session['user_id']]);
 $user = $stmt->fetch();
 
