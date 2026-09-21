@@ -19,7 +19,7 @@ if (!$userId) {
 }
 
 $pdo = get_db_connection();
-$stmt = $pdo->prepare('UPDATE Users SET IsDisabled = ? WHERE ID = ?');
+$stmt = $pdo->prepare('UPDATE Users SET IsDisabled = ? WHERE UserID = ?');
 $stmt->execute([$isDisabled, $userId]);
 
 send_json(['message' => $isDisabled ? 'User disabled' : 'User enabled']);

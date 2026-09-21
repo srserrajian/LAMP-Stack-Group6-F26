@@ -20,7 +20,7 @@ if (!$userId || strlen($newPassword) < 8) {
 
 $pdo = get_db_connection();
 $hash = password_hash($newPassword, PASSWORD_BCRYPT);
-$stmt = $pdo->prepare('UPDATE Users SET PasswordHash = ? WHERE ID = ?');
+$stmt = $pdo->prepare('UPDATE Users SET PasswordHash = ? WHERE UserID = ?');
 $stmt->execute([$hash, $userId]);
 
 send_json(['message' => 'Password updated']);
