@@ -13,7 +13,7 @@ $search = trim($_GET['q'] ?? '');
 if ($search !== '') {
     $like = "%$search%";
     $stmt = $pdo->prepare(
-        'SELECT ID, FirstName, LastName, Username, Email, Role, IsDisabled, CreatedAt, UpdatedAt
+        'SELECT UserID, FirstName, LastName, Username, Email, Role, IsDisabled, CreatedAt, UpdatedAt
          FROM Users
          WHERE FirstName LIKE ? OR LastName LIKE ? OR Username LIKE ? OR Email LIKE ?
          ORDER BY LastName, FirstName'
@@ -21,7 +21,7 @@ if ($search !== '') {
     $stmt->execute([$like, $like, $like, $like]);
 } else {
     $stmt = $pdo->query(
-        'SELECT ID, FirstName, LastName, Username, Email, Role, IsDisabled, CreatedAt, UpdatedAt
+        'SELECT UserID, FirstName, LastName, Username, Email, Role, IsDisabled, CreatedAt, UpdatedAt
          FROM Users ORDER BY LastName, FirstName'
     );
 }
