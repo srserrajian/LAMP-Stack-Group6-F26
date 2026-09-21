@@ -7,7 +7,7 @@ $session = require_login();
 $pdo = get_db_connection();
 
 //look up info instead of trusting the session blindly
-$stmt = $pdo->prepare('SELECT ID, FirstName, LastName, Username, Email, Role, IsDisabled FROM Users WHERE ID = ?');
+$stmt = $pdo->prepare('SELECT UserID, FirstName, LastName, Username, Email, Role, IsDisabled FROM Users WHERE ID = ?');
 $stmt->execute([$session['user_id']]);
 $user = $stmt->fetch();
 
@@ -23,7 +23,7 @@ if ($user['IsDisabled']) {
 }
 
 send_json([
-    'id'         => $user['ID'],
+    'id'         => $user['UserID'],
     'first_name' => $user['FirstName'],
     'last_name'  => $user['LastName'],
     'username'   => $user['Username'],
