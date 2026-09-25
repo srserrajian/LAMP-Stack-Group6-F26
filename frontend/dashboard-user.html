@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang = "en" data-bs-theme = "dark">
+<head>
+    <meta charset = "UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Contacts</title>
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!--Custom Styles-->
+    <link href="css/styles.css" rel="stylesheet">
+    <!--Scripts-->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/contacts.js"></script>
+</head>
+<body class="align-items-center justify-content-center min-vh-100 py-5">
+    <div class="background-glow"></div>
+    <main class="container">
+        <h2 class="fw-bold mb-4 d-flex align-items-center gap-2">Welcome, User!</h2>
+        <div class="header rounded-pill shadow">
+            <div class="d-flex flex-wrap">
+                <!-- Search Contact Bar -->
+                <div class="my-3 me-4 ms-3 flex-grow-1">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Enter contact name" />
+                        <button type="button" id="searchContactBtn" class="btn btn-primary px-4 fw-semibold">
+                            Search Contact
+                        </button>
+                    </div>
+                </div>
+                <!-- Add Contact Button -->
+                <button type="button" id="addContactBtn" class="btn btn-primary rounded-pill my-3 me-3 ms-auto">
+                    <i class="bi bi-plus-circle"></i> Add Contact
+                </button>
+                <!-- Log Out Button -->
+                <button type="button" id="logoutBtn" class="logout-button btn btn-outline-danger rounded-pill my-3 me-3 ms-auto">
+                    Log Out <i class="bi bi-box-arrow-right me-1"></i>
+                </button>
+            </div>
+        </div>
+        <h3 class="mt-3 mb-1">Contacts</h3>
+        <div class="contacts-list p-3 shadow">
+            <div id="contactListContainer">
+                <table class="table">
+                    <thead>
+                        <tr class="text-secondary small fw-semibold">
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Postal Code</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
