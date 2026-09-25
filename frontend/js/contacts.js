@@ -20,12 +20,10 @@ function clearContactError() {
   }
 }
 
-// helper to survive the ID/ContactID mismatch until confirmed with the team
 function getContactId(contact) {
   return contact.ID !== undefined ? contact.ID : contact.ContactID;
 }
 
-// helper: her HTML has a <table> with a <thead> but no <tbody> or Actions column yet
 function getOrCreateTableBody(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return null;
@@ -46,6 +44,55 @@ function getOrCreateTableBody(containerId) {
     table.appendChild(tbody);
   }
   return tbody;
+}
+
+// ---------- INJECT MODAL IF MISSING ----------
+function ensureContactModalExists() {
+  if (document.getElementById("contactModal")) return;
+
+  const modalHTML = `
+    <div id="contactModal" style="display: none;">
+      <div class="modal-content">
+        <h5 id="contactModalTitle">Add Contact</h5>
+        <form id="contactForm">
+          <p id="contactError" class="text-danger small d-none"></p>
+
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" class="form-control" required>
+
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" class="form-control" required>
+
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control">
+
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" class="form-control">
+
+          <label for="address">Address</label>
+          <input type="text" id="address" class="form-control">
+
+          <label for="city">City</label>
+          <input type="text" id="city" class="form-control">
+
+          <label for="state">State</label>
+          <input type="text" id="state" class="form-control">
+
+          <label for="postalCode">Postal Code</label>
+          <input type="text" id="postalCode" class="form-control">
+
+          <label for="notes">Notes</label>
+          <textarea id="notes" class="form-control"></textarea>
+
+          <button type="button" onclick="closeContactModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+  document.getElementById("contactForm").addEventListener("submit", submitContactForm);
 }
 
 // ---------- LOAD ALL ----------
@@ -96,6 +143,7 @@ async function searchContacts(query) {
 // ---------- ADD / EDIT MODAL ----------
 function openAddModal() {
   document.getElementById("contactForm").reset();
+  document.getElementById("contactModalTitle").textContent = "Add Contact";
   modalMode = "add";
   selectedContactId = null;
   clearContactError();
@@ -105,8 +153,7 @@ function openAddModal() {
 }
 
 function openEditModal(contactId) {
-  const list = currentContacts; // works whether this came from loadContacts or loadAllContacts
-  const contact = list.find(function (c) {
+  const contact = currentContacts.find(function (c) {
     return getContactId(c) === contactId;
   });
   if (!contact) return;
@@ -121,6 +168,7 @@ function openEditModal(contactId) {
   document.getElementById("postalCode").value = contact.PostalCode || "";
   document.getElementById("notes").value = contact.Notes || "";
 
+  document.getElementById("contactModalTitle").textContent = "Edit Contact";
   modalMode = "edit";
   selectedContactId = contactId;
   clearContactError();
@@ -210,7 +258,6 @@ async function deleteContact(contactId) {
   }
 }
 
-// picks the right reload depending on which page we're on
 function reloadCurrentView() {
   if (typeof loadAllContacts === "function" && isAdminContactsPage()) {
     loadAllContacts();
@@ -221,7 +268,6 @@ function reloadCurrentView() {
 
 function isAdminContactsPage() {
   return typeof loadUsers === "function" && !document.getElementById("userListContainer");
-  // admin.js is loaded (loadUsers exists) but this page has no user table -> it's admin-contacts.html
 }
 
 // ---------- RENDER ----------
@@ -246,7 +292,7 @@ function renderContactRow(contact) {
   const row = document.createElement("tr");
 
   const ownerLine = contact.OwnerUsername
-    ? `<br><small class="text-secondary">owner: ${contact.OwnerUsername}</small>`
+    ? `<br><small>owner: ${contact.OwnerUsername}</small>`
     : "";
 
   row.innerHTML = `
@@ -272,12 +318,13 @@ function renderContactRow(contact) {
 
 // ---------- PAGE SETUP ----------
 document.addEventListener("DOMContentLoaded", async function () {
-  const user = await checkAuth(); // from auth.js
-  if (!user) return; // checkAuth already redirected to index.html
+  const user = await checkAuth();
+  if (!user) return;
 
   const container = document.getElementById("contactListContainer");
-  if (!container) return; // this page has no contacts view (e.g. dashboard-admin.html)
+  if (!container) return;
 
+  ensureContactModalExists();
   reloadCurrentView();
 
   const searchInput = document.getElementById("searchInput");
@@ -298,10 +345,5 @@ document.addEventListener("DOMContentLoaded", async function () {
   const addBtn = document.getElementById("addContactBtn");
   if (addBtn) {
     addBtn.addEventListener("click", openAddModal);
-  }
-
-  const contactForm = document.getElementById("contactForm");
-  if (contactForm) {
-    contactForm.addEventListener("submit", submitContactForm);
   }
 });
