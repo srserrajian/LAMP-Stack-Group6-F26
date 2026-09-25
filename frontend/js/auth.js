@@ -42,7 +42,7 @@ async function doLogin(event) {
     if (response.ok) {
       const role = data.user.role;
       if (role === "admin") {
-        window.location.href = "dashboard-admin.html";
+        window.location.href = "admin-contacts.html";
       } else {
         window.location.href = "dashboard-user.html";
       }
