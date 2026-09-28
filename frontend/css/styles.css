@@ -2,6 +2,7 @@
     --app-font: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* Background */
 .background-glow {
     position: fixed;
     top: 50%;
@@ -38,7 +39,130 @@ h3 {
     color: rgba(48, 119, 102);
 }
 
-/* Form */
+/* Boxes */
+.glass-card {
+    background-color: rgba(232, 232, 232);
+    border: 6px solid rgba(48, 119, 102);
+}   
+
+.contacts-list {
+    background-color: rgba(232, 232, 232);
+    border: 6px solid rgba(48, 119, 102);
+    border-radius: 20px;
+    min-height: 100px;
+}
+
+.table {
+    table-layout: fixed;
+    border-bottom: 1px;
+    border-color: rgba(48, 119, 102);
+}
+
+.table tbody td {
+    background-color: rgba(232, 232, 232);
+    color: rgba(48, 119, 102);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: auto;
+}
+
+#adminModal {
+    background-color: rgba(232, 232, 232);
+    border: 6px solid rgba(48, 119, 102);
+    border-radius: 20px;
+}
+
+#contactListContainer th {
+    background-color: transparent !important;
+    color: rgba(48, 119, 102);
+    border-bottom-color: rgba(48, 119, 102);
+    border-bottom-width: 3px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+#contactModal {
+    background-color: rgba(232, 232, 232);
+    border: 6px solid rgba(48, 119, 102);
+    border-radius: 20px;
+}
+
+#changePasswordModal {
+    background-color: rgba(232, 232, 232);
+    border: 6px solid rgba(48, 119, 102);
+    border-radius: 20px;
+}
+
+#usersListContainer th {
+    background-color: transparent !important;
+    color: rgba(48, 119, 102);
+    border-bottom-color: rgba(48, 119, 102);
+    border-bottom-width: 3px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.users-list {
+    background-color: rgba(232, 232, 232);
+    border: 6px solid rgba(48, 119, 102);
+    border-radius: 20px;
+    min-height: 100px;
+}
+
+/* Buttons */
+.btn {
+    background-color: rgba(48, 119, 102);
+    border-color: rgba(55, 134, 115);
+}
+
+.btn-primary:hover {
+    background-color: rgba(55, 134, 115);
+    border-color: rgba(55, 134, 115);
+}
+
+.cancel-btn {
+    background-color: rgba(232, 232, 232);
+    border: 2px solid rgba(99, 99, 99);
+    color:rgb(99, 99, 99);
+}
+
+.cancel-btn:hover {
+    background-color: rgb(149, 149, 149);
+    border-color: rgba(149, 149, 149);
+}
+
+.cancel-btn:active {
+    border: 2px solid rgba(99, 99, 99);
+    background-color: rgb(149, 149, 149);
+    color:rgb(99, 99, 99);
+}
+
+.delete-btn {
+    background-color: rgba(232, 232, 232);
+    border: 2px solid rgba(233, 82, 82);
+    color: rgba(233, 82, 82);
+}
+
+.details-btn {
+    background-color: rgba(232, 232, 232);
+    border: 2px solid rgba(99, 99, 99);
+    color: rgba(99, 99, 99);
+}
+
+.edit-btn {
+    background-color: rgba(232, 232, 232);
+    border: 2px solid rgba(99, 99, 99);
+    color: rgba(99, 99, 99);
+}
+
+.logout-btn {
+    background-color: rgba(232, 232, 232);
+    border: 2px solid rgba(233, 82, 82);
+    color: rgba(233, 82, 82);
+}
+
+/* Forms */
 .form-label-contrast {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: rgba(48, 119, 102);
@@ -60,44 +184,11 @@ h3 {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-/* Buttons */
-.btn {
-    background-color: rgba(48, 119, 102);
-    border-color: rgba(55, 134, 115);
-}
-
-.btn-primary:hover {
-    background-color: rgba(55, 134, 115);
-    border-color: rgba(55, 134, 115);
-}
-
-.logout-button {
-    background-color: rgba(232, 232, 232);
-    border: 2px solid rgba(233, 82, 82);
-    color: rgba(233, 82, 82);
-}
-
-/* Boxes */
-.glass-card {
+/* Header */
+.header {
     background-color: rgba(232, 232, 232);
     border: 6px solid rgba(48, 119, 102);
-}   
-
-.contacts-list {
-    background-color: rgba(232, 232, 232);
-    border: 6px solid rgba(48, 119, 102);
-    border-radius: 20px;
-    min-height: 100px;
-}
-
-#contactListContainer th {
-    background-color: transparent !important;
-    color: rgba(48, 119, 102);
-    border-right: 1px solid var(--border, #ddd);
-    border-bottom-color: rgba(48, 119, 102);
-    border-bottom-width: 3px;
-    padding-left: 12px;
-    padding-right: 12px;
+    width: 100%;
 }
 
 /* Icons */
@@ -121,9 +212,4 @@ h3 {
     border: 1px solid var(--text-muted) !important;
 }
 
-/* Header */
-.header {
-    background-color: rgba(232, 232, 232);
-    border: 6px solid rgba(48, 119, 102);
-    width: 100%;
-}
+
