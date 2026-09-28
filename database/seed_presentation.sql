@@ -48,7 +48,7 @@ VALUES
     'Morgan',
     'avery.admin',
     'avery.admin@example.com',
-    '2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
+    '$2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
     'admin',
     0
 ),
@@ -57,7 +57,7 @@ VALUES
     'Lee',
     'jamie.lee',
     'jamie.lee@example.com',
-    '2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
+    '$2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
     'user',
     0
 ),
@@ -66,7 +66,7 @@ VALUES
     'Green',
     'marcus.green',
     'marcus.green@example.com',
-    '2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
+    '$2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
     'user',
     0
 ),
@@ -75,7 +75,7 @@ VALUES
     'Chen',
     'sophia.chen',
     'sophia.chen@example.com',
-    '2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
+    '$2y$12$GJRFmQlyaS3h2B2sR3hDCO0SF71K33TNZKNsx9qI6vOzTNjydH1ey',
     'user',
     0
 );
