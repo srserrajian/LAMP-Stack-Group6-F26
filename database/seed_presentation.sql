@@ -1,8 +1,20 @@
 USE ContactManagerDB;
 
+-- =====================================================
+-- RESET DATABASE DATA FOR PRESENTATION
+-- WARNING: THIS DELETES ALL USERS AND CONTACTS
+-- =====================================================
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE Contacts;
+TRUNCATE TABLE Users;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 START TRANSACTION;
 
-INSERT IGNORE INTO Users
+INSERT INTO Users
 (
     FirstName,
     LastName,
@@ -21,15 +33,6 @@ VALUES
     '$2y$12$.SDkblsKmEHw5o14R8jbYOgf/3UVb524xTz0wI9zpFQ6w7zd71gde',
     'admin',
     0
-);
-
-DELETE FROM Users
-WHERE Username IN
-(
-    'avery.admin',
-    'jamie.lee',
-    'marcus.green',
-    'sophia.chen'
 );
 
 INSERT INTO Users
