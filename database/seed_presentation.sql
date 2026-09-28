@@ -1,10 +1,5 @@
 USE ContactManagerDB;
 
--- =====================================================
--- RESET DATABASE DATA FOR PRESENTATION
--- WARNING: THIS DELETES ALL USERS AND CONTACTS
--- =====================================================
-
 SET FOREIGN_KEY_CHECKS = 0;
 
 TRUNCATE TABLE Contacts;
