@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang = "en" data-bs-theme = "dark">
+<head>
+    <meta charset = "UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Contacts - Contact Manager</title>
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!--Custom Styles-->
+    <link href="css/styles.css" rel="stylesheet">
+    <!--Scripts-->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/contacts.js"></script>
+</head>
+<body class="align-items-center justify-content-center min-vh-100 py-5">
+    <div class="background-glow"></div>
+    <main class="container">
+        <h2 class="fw-bold mb-4">Welcome, Admin!</h2>
+        <div class="header rounded-pill shadow">
+            <div class="d-flex flex-wrap">
+                <!-- Search Contact Bar -->
+                <div class="my-auto me-4 ms-3 flex-grow-1">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Enter contact name" />
+                        <button type="button" id="searchContactBtn" class="btn btn-primary px-4 fw-semibold">
+                            Search Contact
+                        </button>
+                    </div>
+                </div>
+                <!-- All Contacts Button -->
+                <button type="button" id="allContactsBtn" class="btn btn-primary rounded-pill my-3 me-3 ms-auto">
+                    <i class="bi bi-journal-text"></i> All Contacts
+                </button>
+                <!-- Users Button -->
+                <button type="button" id="usersBtn" class="btn btn-primary rounded-pill my-3 me-3 ms-auto">
+                    <i class="bi bi-person"></i> Users
+                </button>
+                <!-- Add Contact Button -->
+                <button type="button" id="addContactBtn" class="btn btn-primary rounded-pill my-3 me-3 ms-auto">
+                    <i class="bi bi-plus-circle"></i> Add Contact
+                </button>
+                <!-- Log Out Button -->
+                <button type="button" id="logoutBtn" class="logout-btn btn btn-outline-danger rounded-pill my-3 me-3 ms-auto">
+                    Log Out <i class="bi bi-box-arrow-right me-1"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Create Contact Form -->
+        <div id="contactModal" class="my-3">
+            <div class="modal-content shadow">
+                <h3 id="contactModalTitle" class="text-center my-3 fw-bold">Create New Contact</h3>
+                <form id="contactForm">
+                    <p id="contactError" class="text-danger small d-none"></p>
+                    <div class="row justify-content-center gx-4 gy-3">
+                        <!-- First Name, Last Name -->
+                        <div class="col-sm-4">
+                            <label for="firstName" class="form-label form-label-contrast small fw-semibold">First Name</label>
+                            <input type="text" id="firstName" class="form-control" required>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label for="lastName" class="form-label form-label-contrast small fw-semibold">Last Name</label>
+                            <input type="text" id="lastName" class="form-control" required>
+                        </div>
+
+                        <!-- Email, Phone Number -->
+                        <div class="col-sm-5">
+                            <label for="email" class="form-label form-label-contrast small fw-semibold">Email</label>
+                            <input type="email" id="email" class="form-control">
+                        </div>
+                
+                        <div class="col-sm-3">
+                            <label for="phone" class="form-label form-label-contrast small fw-semibold">Phone Number</label>
+                            <input type="text" id="phone" class="form-control">
+                        </div>
+                    
+                        <!-- Address -->
+                        <div class="col-sm-8">
+                            <label for="address" class="form-label form-label-contrast small fw-semibold">Address</label>
+                            <input type="text" id="address" class="form-control">
+                        </div>
+                        <div class="w-100"></div>
+
+                        <!-- City, State, Postal Code-->
+                        <div class="col-sm-4">
+                            <label for="city" class="form-label form-label-contrast small fw-semibold">City</label>
+                            <input type="text" id="city" class="form-control">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="state" class="form-label form-label-contrast small fw-semibold">State</label>
+                            <input type="text" id="state" class="form-control">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="postalCode" class="form-label form-label-contrast small fw-semibold">Postal Code</label>
+                            <input type="text" id="postalCode" class="form-control">
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="col-md-8">
+                            <label for="notes" class="form-label form-label-contrast small fw-semibold">Notes</label>
+                            <textarea id="notes" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <!-- Cancel, Create Buttons-->
+                        <button type="button" id="cancelContactBtn" class="btn cancel-btn btn-primary my-3 ms-3">Cancel</button>
+                        <button type="submit" id="saveContactBtn" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Display Contacts -->
+        <h3 class="mt-3 mb-1">My Contacts</h3>
+        <div class="contacts-list p-3 shadow">
+            <div id="contactListContainer">
+                <table class="table mb-0">
+                    <thead>
+                        <tr class="text-secondary small fw-semibold">
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-secondary details-btn"><i class="bi bi-three-dots"></i> Details</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary edit-btn"><i class="bi bi-pencil"></i> Edit</button>
+                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn"><i class="bi bi-trash"></i> Delete</button>
+                        </td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
