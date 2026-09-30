@@ -2,19 +2,40 @@
 let currentUsers = [];
 let selectedUserId = null; // tracks which user the password modal is acting on
 
-// ---------- ERROR HELPER (same pattern as auth.js/contacts.js) ----------
+// ---------- ERROR HELPERS ----------
 function showAdminError(message) {
   const el = document.getElementById("adminError");
   if (el) {
     el.textContent = message;
+    el.classList.remove("d-none");
   }
 }
 
 function clearAdminError() {
-  showAdminError("");
+  const el = document.getElementById("adminError");
+  if (el) {
+    el.textContent = "";
+    el.classList.add("d-none");
+  }
 }
 
-// ---------- LOAD ALL USERS (updated) ----------
+function showChangePasswordError(message) {
+  const el = document.getElementById("changePasswordError");
+  if (el) {
+    el.textContent = message;
+    el.classList.remove("d-none");
+  }
+}
+
+function clearChangePasswordError() {
+  const el = document.getElementById("changePasswordError");
+  if (el) {
+    el.textContent = "";
+    el.classList.add("d-none");
+  }
+}
+
+// ---------- LOAD ALL USERS ----------
 async function loadUsers() {
   try {
     const response = await fetch(ADMIN_BASE + "all_users.php", {
@@ -24,7 +45,7 @@ async function loadUsers() {
 
     if (response.ok) {
       const data = await response.json();
-      currentUsers = data.users; // now wrapped, not a bare array
+      currentUsers = data.users; // wrapped, not a bare array
       renderUserList(currentUsers);
     } else if (response.status === 403) {
       showAdminError("Admin access required");
@@ -37,7 +58,7 @@ async function loadUsers() {
   }
 }
 
-// ---------- SEARCH USERS (updated: q -> search) ----------
+// ---------- SEARCH USERS ----------
 async function searchUsers(query) {
   if (!query) {
     loadUsers();
@@ -63,10 +84,172 @@ async function searchUsers(query) {
   }
 }
 
-// ---------- NEW: LOAD ALL CONTACTS (admin view, with owner info) ----------
-// filename below is a guess ("admin/all_contacts.php") — confirm with Morgan
-let currentAllContacts = [];
+// ---------- RENDER USERS ----------
+function renderUserList(users) {
+  const tbody = getOrCreateTableBody("usersListContainer"); // reuses the helper from contacts.js
+  if (!tbody) return;
 
+  tbody.innerHTML = "";
+
+  if (users.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4">No users found.</td></tr>`;
+    return;
+  }
+
+  users.forEach(function (user) {
+    tbody.appendChild(renderUserRow(user));
+  });
+}
+
+function renderUserRow(user) {
+  const row = document.createElement("tr");
+  const isDisabled = !!user.IsDisabled;
+
+  row.innerHTML = `
+    <td>${user.Username}<br><small>${user.FirstName} ${user.LastName}</small></td>
+    <td>${user.Role === "admin" ? "Yes" : "No"}</td>
+    <td>${isDisabled ? "Disabled" : "Active"}</td>
+    <td>
+      <button type="button" class="btn btn-sm btn-outline-secondary details-btn">Change Password</button>
+      <button type="button" class="btn btn-sm btn-outline-danger delete-btn">${isDisabled ? "Enable" : "Disable"}</button>
+    </td>
+  `;
+
+  row.querySelector(".details-btn").addEventListener("click", function () {
+    openChangePasswordModal(user.UserID);
+  });
+  row.querySelector(".delete-btn").addEventListener("click", function () {
+    toggleUserDisabled(user.UserID, !isDisabled);
+  });
+
+  return row;
+}
+
+// ---------- DISABLE / ENABLE USER ----------
+async function toggleUserDisabled(userId, disable) {
+  const confirmed = confirm(
+    disable ? "Disable this user's account?" : "Re-enable this user's account?"
+  );
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(ADMIN_BASE + "admin_set_user_disabled.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ user_id: userId, is_disabled: disable }),
+    });
+
+    if (response.ok) {
+      loadUsers();
+    } else {
+      const data = await response.json();
+      showAdminError(data.error || "Failed to update user");
+    }
+  } catch (err) {
+    showAdminError("Something went wrong updating this user");
+  }
+}
+
+// ---------- CHANGE PASSWORD MODAL ----------
+function openChangePasswordModal(userId) {
+  selectedUserId = userId;
+  clearChangePasswordError();
+  document.getElementById("changePasswordForm").reset();
+
+  const modal = document.getElementById("changePasswordModal");
+  if (modal) modal.style.display = "block";
+}
+
+function closeChangePasswordModal() {
+  const modal = document.getElementById("changePasswordModal");
+  if (modal) modal.style.display = "none";
+  selectedUserId = null;
+}
+
+async function submitChangePasswordForm(event) {
+  event.preventDefault();
+
+  const newPassword = document.getElementById("inputNewPassword").value.trim();
+  clearChangePasswordError();
+
+  if (newPassword.length < 8) {
+    showChangePasswordError("Password must be at least 8 characters");
+    return;
+  }
+
+  try {
+    const response = await fetch(ADMIN_BASE + "admin_change_password.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ user_id: selectedUserId, new_password: newPassword }),
+    });
+
+    if (response.ok) {
+      closeChangePasswordModal();
+    } else {
+      const data = await response.json();
+      showChangePasswordError(data.error || "Failed to update password");
+    }
+  } catch (err) {
+    showChangePasswordError("Something went wrong updating the password");
+  }
+}
+
+// ---------- CREATE ADMIN MODAL ----------
+function openAdminModal() {
+  document.getElementById("adminForm").reset();
+  clearAdminError();
+
+  const modal = document.getElementById("adminModal");
+  if (modal) modal.style.display = "block";
+}
+
+function closeAdminModal() {
+  const modal = document.getElementById("adminModal");
+  if (modal) modal.style.display = "none";
+}
+
+async function submitAdminForm(event) {
+  event.preventDefault();
+
+  const data = {
+    first_name: document.getElementById("newAdminFirstName").value.trim(),
+    last_name: document.getElementById("newAdminLastName").value.trim(),
+    email: document.getElementById("newAdminEmail").value.trim(),
+    username: document.getElementById("newAdminUsername").value.trim(),
+    password: document.getElementById("newAdminPassword").value.trim(),
+  };
+
+  clearAdminError();
+
+  if (!data.first_name || !data.last_name || !data.email || !data.username || !data.password) {
+    showAdminError("All fields are required");
+    return;
+  }
+
+  try {
+    const response = await fetch(ADMIN_BASE + "admin_create_admin.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      closeAdminModal();
+      loadUsers();
+    } else {
+      const result = await response.json();
+      showAdminError(result.error || "Failed to create admin account");
+    }
+  } catch (err) {
+    showAdminError("Something went wrong creating this admin account");
+  }
+}
+
+// ---------- LOAD ALL CONTACTS (admin view, with owner info) ----------
 async function loadAllContacts(query = "") {
   const url = query
     ? ADMIN_BASE + "admin_contacts.php?search=" + encodeURIComponent(query)
@@ -80,37 +263,73 @@ async function loadAllContacts(query = "") {
 
     if (response.ok) {
       const data = await response.json();
-      currentAllContacts = data.contacts;
-      renderAllContactsList(currentAllContacts);
+      currentContacts = data.contacts; // shared with contacts.js so Edit/Delete keep working
+      renderContactList(currentContacts);
     } else {
       const data = await response.json();
-      showAdminError(data.error || "Failed to load contacts");
+      showContactError(data.error || "Failed to load contacts");
     }
   } catch (err) {
-    showAdminError("Something went wrong loading contacts");
+    showContactError("Something went wrong loading contacts");
   }
 }
 
-function renderAllContactsList(contacts) {
-  const container = document.getElementById("allContactsContainer");
-  if (!container) return;
+// ---------- PAGE SETUP ----------
+document.addEventListener("DOMContentLoaded", async function () {
+  const page = document.body.dataset.page;
 
-  container.innerHTML = "";
-
-  if (contacts.length === 0) {
-    container.innerHTML = "<p>No contacts found.</p>";
-    return;
+  const allContactsBtn = document.getElementById("allContactsBtn");
+  if (allContactsBtn) {
+    allContactsBtn.addEventListener("click", function () {
+      window.location.href = "admin-contacts.html";
+    });
   }
 
-  contacts.forEach(function (contact) {
-    const row = document.createElement("div");
-    row.className = "contact-row";
-    row.innerHTML = `
-      <span>${contact.FirstName} ${contact.LastName}</span>
-      <span>${contact.Email || ""}</span>
-      <span>${contact.Phone || ""}</span>
-      <span>Owner: ${contact.OwnerFirstName} ${contact.OwnerLastName} (${contact.OwnerUsername})</span>
-    `;
-    container.appendChild(row);
-  });
-}
+  const usersBtn = document.getElementById("usersBtn");
+  if (usersBtn) {
+    usersBtn.addEventListener("click", function () {
+      window.location.href = "admin-user-management.html";
+    });
+  }
+
+  const backToHomeBtn = document.getElementById("backToHomeBtn");
+  if (backToHomeBtn) {
+    backToHomeBtn.addEventListener("click", function () {
+      window.location.href = "admin-dashboard.html";
+    });
+  }
+
+  if (page !== "admin-users") return;
+
+  const user = await checkAuth();
+  if (!user) return;
+
+  loadUsers();
+
+  const adminForm = document.getElementById("adminForm");
+  if (adminForm) adminForm.addEventListener("submit", submitAdminForm);
+
+  const cancelAdminBtn = document.getElementById("cancelAdminBtn");
+  if (cancelAdminBtn) cancelAdminBtn.addEventListener("click", closeAdminModal);
+
+  const createAdminBtn = document.getElementById("addContactBtn");
+  if (createAdminBtn) createAdminBtn.addEventListener("click", openAdminModal);
+
+  const changePasswordForm = document.getElementById("changePasswordForm");
+  if (changePasswordForm) {
+    changePasswordForm.addEventListener("submit", submitChangePasswordForm);
+  }
+
+  const cancelPasswordBtn = document.getElementById("cancelPasswordBtn");
+  if (cancelPasswordBtn) cancelPasswordBtn.addEventListener("click", closeChangePasswordModal);
+
+  const searchInput = document.getElementById("searchInput");
+  const searchBtn = document.getElementById("searchContactBtn");
+
+  function runUserSearch() {
+    searchUsers(searchInput ? searchInput.value.trim() : "");
+  }
+
+  if (searchInput) searchInput.addEventListener("input", runUserSearch);
+  if (searchBtn) searchBtn.addEventListener("click", runUserSearch);
+});

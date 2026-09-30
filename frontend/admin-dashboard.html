@@ -15,7 +15,7 @@
     <script src="js/admin.js"></script>
     <script src="js/contacts.js"></script>
 </head>
-<body class="align-items-center justify-content-center min-vh-100 py-5">
+<body class="align-items-center justify-content-center min-vh-100 py-5" data-page="admin-dashboard">
     <div class="background-glow"></div>
     <main class="container">
         <h2 class="fw-bold mb-4">Welcome, Admin!</h2>
@@ -50,7 +50,7 @@
             </div>
         </div>
         <!-- Create Contact Form -->
-        <div id="contactModal" class="my-3">
+        <div id="contactModal" class="my-3" style="display: none;">
             <div class="modal-content shadow">
                 <h3 id="contactModalTitle" class="text-center my-3 fw-bold">Create New Contact</h3>
                 <form id="contactForm">
@@ -125,7 +125,7 @@
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Email</th>
-                            <th>Actions</th>
+                            <th class="actions-header">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
