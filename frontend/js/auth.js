@@ -44,7 +44,7 @@ async function doLogin(event) {
       if (role === "admin") {
         window.location.href = "admin-contacts.html";
       } else {
-        window.location.href = "dashboard-user.html";
+        window.location.href = "user-dashboard.html";
       }
     } else if (response.status === 401) {
       showError("Invalid username or password", "loginError");
