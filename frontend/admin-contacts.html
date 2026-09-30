@@ -15,7 +15,7 @@
     <script src="js/admin.js"></script>
     <script src="js/contacts.js"></script>
 </head>
-<body class="align-items-center justify-content-center min-vh-100 py-5">
+<body class="align-items-center justify-content-center min-vh-100 py-5" data-page="admin-contacts">
     <div class="background-glow"></div>
     <main class="container">
         <h2 class="fw-bold mb-4 d-flex align-items-center gap-2">All Contacts</h2>
@@ -41,6 +41,72 @@
                 </button>
             </div>
         </div>
+        <!-- Edit Contact Form -->
+        <div id="contactModal" class="my-3" style="display: none;">
+            <div class="modal-content shadow">
+                <h3 id="contactModalTitle" class="text-center my-3 fw-bold">Edit Contact</h3>
+                <form id="contactForm">
+                    <p id="contactError" class="text-danger small d-none"></p>
+                    <div class="row justify-content-center gx-4 gy-3">
+                        <!-- First Name, Last Name -->
+                        <div class="col-sm-4">
+                            <label for="firstName" class="form-label form-label-contrast small fw-semibold">First Name</label>
+                            <input type="text" id="firstName" class="form-control" required>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label for="lastName" class="form-label form-label-contrast small fw-semibold">Last Name</label>
+                            <input type="text" id="lastName" class="form-control" required>
+                        </div>
+
+                        <!-- Email, Phone Number -->
+                        <div class="col-sm-5">
+                            <label for="email" class="form-label form-label-contrast small fw-semibold">Email</label>
+                            <input type="email" id="email" class="form-control">
+                        </div>
+                
+                        <div class="col-sm-3">
+                            <label for="phone" class="form-label form-label-contrast small fw-semibold">Phone Number</label>
+                            <input type="text" id="phone" class="form-control">
+                        </div>
+                    
+                        <!-- Address -->
+                        <div class="col-sm-8">
+                            <label for="address" class="form-label form-label-contrast small fw-semibold">Address</label>
+                            <input type="text" id="address" class="form-control">
+                        </div>
+                        <div class="w-100"></div>
+
+                        <!-- City, State, Postal Code-->
+                        <div class="col-sm-4">
+                            <label for="city" class="form-label form-label-contrast small fw-semibold">City</label>
+                            <input type="text" id="city" class="form-control">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="state" class="form-label form-label-contrast small fw-semibold">State</label>
+                            <input type="text" id="state" class="form-control">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label for="postalCode" class="form-label form-label-contrast small fw-semibold">Postal Code</label>
+                            <input type="text" id="postalCode" class="form-control">
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="col-md-8">
+                            <label for="notes" class="form-label form-label-contrast small fw-semibold">Notes</label>
+                            <textarea id="notes" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <!-- Cancel, Save Buttons-->
+                        <button type="button" id="cancelContactBtn" class="btn cancel-btn btn-primary my-3 ms-3">Cancel</button>
+                        <button type="submit" id="saveContactBtn" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <!-- Display Contacts -->
         <div class="contacts-list p-3 shadow mt-3">
             <div id="contactListContainer">
@@ -50,7 +116,7 @@
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Email</th>
-                            <th>Actions</th>
+                            <th class="actions-header">Actions</th>
                         </tr>
                     </thead>
                     <tbody>

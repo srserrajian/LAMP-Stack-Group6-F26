@@ -92,7 +92,6 @@ function ensureContactModalExists() {
   `;
 
   document.body.insertAdjacentHTML("beforeend", modalHTML);
-  document.getElementById("contactForm").addEventListener("submit", submitContactForm);
 }
 
 // ---------- LOAD ALL ----------
@@ -266,8 +265,9 @@ function reloadCurrentView() {
   }
 }
 
+// page identity is set via <body data-page="..."> rather than guessing from DOM shape
 function isAdminContactsPage() {
-  return typeof loadUsers === "function" && !document.getElementById("userListContainer");
+  return document.body.dataset.page === "admin-contacts";
 }
 
 // ---------- RENDER ----------
@@ -326,6 +326,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   ensureContactModalExists();
   reloadCurrentView();
+
+  const contactForm = document.getElementById("contactForm");
+  if (contactForm) {
+    contactForm.addEventListener("submit", submitContactForm);
+  }
+
+  const cancelContactBtn = document.getElementById("cancelContactBtn");
+  if (cancelContactBtn) {
+    cancelContactBtn.addEventListener("click", closeContactModal);
+  }
 
   const searchInput = document.getElementById("searchInput");
   const searchBtn = document.getElementById("searchContactBtn");
