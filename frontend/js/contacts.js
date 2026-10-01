@@ -299,7 +299,6 @@ function renderContactRow(contact) {
     <td>${contact.FirstName} ${contact.LastName}${ownerLine}</td>
     <td>${contact.Phone || ""}</td>
     <td>${contact.Email || ""}</td>
-    <td>${contact.PostalCode || ""}</td>
     <td>
       <button type="button" class="btn btn-sm btn-outline-secondary edit-btn">Edit</button>
       <button type="button" class="btn btn-sm btn-outline-danger delete-btn">Delete</button>
