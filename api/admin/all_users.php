@@ -7,7 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     send_json(['error' => 'Method not allowed'], 405);
 }
 
-require_admin();
+$session = require_admin();
+$currentUserId = (int) $session['user_id'];
 
 $pdo = get_db_connection();
 
@@ -26,10 +27,11 @@ if ($search === '') {
             CreatedAt,
             UpdatedAt
          FROM Users
+         WHERE UserID <> ?
          ORDER BY LastName, FirstName'
     );
 
-    $stmt->execute();
+    $stmt->execute([$currentUserId]);
 } else {
     $like = '%' . $search . '%';
 
@@ -45,14 +47,15 @@ if ($search === '') {
             CreatedAt,
             UpdatedAt
          FROM Users
-         WHERE FirstName LIKE ?
+         WHERE UserID <> ?
+           AND (FirstName LIKE ?
             OR LastName LIKE ?
             OR Username LIKE ?
-            OR Email LIKE ?
+            OR Email LIKE ?)
          ORDER BY LastName, FirstName'
     );
 
-    $stmt->execute([$like, $like, $like, $like]);
+    $stmt->execute([$currentUserId, $like, $like, $like, $like]);
 }
 
 send_json([
