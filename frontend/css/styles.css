@@ -170,17 +170,33 @@ h3 {
     color: #ffffff;
 }
 
+.disable-btn,
 .enable-btn {
-    background-color: rgba(232, 232, 232);
-    border: 2px solid rgb(40, 167, 69);
-    color: rgb(30, 130, 54);
+    color: #ffffff;
     font-weight: 600;
+}
+
+.disable-btn {
+    background-color: rgb(220, 53, 69);
+    border: 2px solid rgb(220, 53, 69);
+}
+
+.disable-btn:hover,
+.disable-btn:active {
+    background-color: rgb(176, 42, 55);
+    border-color: rgb(176, 42, 55);
+    color: #ffffff;
+}
+
+.enable-btn {
+    background-color: rgb(40, 167, 69);
+    border: 2px solid rgb(40, 167, 69);
 }
 
 .enable-btn:hover,
 .enable-btn:active {
-    background-color: rgb(40, 167, 69);
-    border-color: rgb(40, 167, 69);
+    background-color: rgb(30, 126, 52);
+    border-color: rgb(30, 126, 52);
     color: #ffffff;
 }
 

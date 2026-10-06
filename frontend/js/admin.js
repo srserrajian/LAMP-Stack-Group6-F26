@@ -112,7 +112,7 @@ function renderUserRow(user) {
     <td>
       <button type="button" class="btn btn-sm contacts-btn">Contacts</button>
       <button type="button" class="btn btn-sm btn-outline-secondary details-btn">Change Password</button>
-      <button type="button" class="btn btn-sm toggle-user-btn ${isDisabled ? "enable-btn" : "delete-btn"}">${isDisabled ? "Enable" : "Disable"}</button>
+      <button type="button" class="btn btn-sm toggle-user-btn ${isDisabled ? "enable-btn" : "disable-btn"}">${isDisabled ? "Enable" : "Disable"}</button>
     </td>
   `;
 
