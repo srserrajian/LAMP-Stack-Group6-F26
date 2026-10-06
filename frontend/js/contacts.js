@@ -291,12 +291,8 @@ function renderContactRow(contact) {
   const contactId = getContactId(contact);
   const row = document.createElement("tr");
 
-  const ownerLine = contact.OwnerUsername
-    ? `<br><small>owner: ${contact.OwnerUsername}</small>`
-    : "";
-
   row.innerHTML = `
-    <td>${contact.FirstName} ${contact.LastName}${ownerLine}</td>
+    <td>${contact.FirstName} ${contact.LastName}</td>
     <td>${contact.Phone || ""}</td>
     <td>${contact.Email || ""}</td>
     <td>${contact.PostalCode || ""}</td>

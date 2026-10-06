@@ -18,7 +18,7 @@
 <body class="align-items-center justify-content-center min-vh-100 py-5" data-page="admin-contacts">
     <div class="background-glow"></div>
     <main class="container">
-        <h2 class="fw-bold mb-4 d-flex align-items-center gap-2">All Contacts</h2>
+        <h2 id="contactsPageTitle" class="fw-bold mb-4 d-flex align-items-center gap-2">Contacts</h2>
         <div class="header rounded-pill shadow">
             <div class="d-flex flex-wrap">
                 <!-- Search Contact Bar -->
@@ -31,6 +31,10 @@
                         </button>
                     </div>
                 </div>
+                <!-- Back to Users Button -->
+                <button type="button" id="backToUsersBtn" class="btn btn-primary rounded-pill my-3 me-3 ms-auto">
+                    <i class="bi bi-people"></i> Back to Users
+                </button>
                 <!-- Back to Home Button -->
                 <button type="button" id="backToHomeBtn" class="btn btn-primary rounded-pill my-3 me-3 ms-auto">
                     <i class="bi bi-house"></i> Back to Home

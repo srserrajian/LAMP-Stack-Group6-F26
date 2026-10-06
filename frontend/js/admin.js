@@ -110,11 +110,15 @@ function renderUserRow(user) {
     <td>${user.Role === "admin" ? "Yes" : "No"}</td>
     <td>${isDisabled ? "Disabled" : "Active"}</td>
     <td>
+      <button type="button" class="btn btn-sm btn-outline-secondary contacts-btn">Contacts</button>
       <button type="button" class="btn btn-sm btn-outline-secondary details-btn">Change Password</button>
       <button type="button" class="btn btn-sm btn-outline-danger delete-btn">${isDisabled ? "Enable" : "Disable"}</button>
     </td>
   `;
 
+  row.querySelector(".contacts-btn").addEventListener("click", function () {
+    window.location.href = "admin-contacts.html?user_id=" + encodeURIComponent(user.UserID);
+  });
   row.querySelector(".details-btn").addEventListener("click", function () {
     openChangePasswordModal(user.UserID);
   });
@@ -249,11 +253,20 @@ async function submitAdminForm(event) {
   }
 }
 
-// ---------- LOAD ALL CONTACTS (admin view, with owner info) ----------
+// ---------- LOAD A USER'S CONTACTS (admin view) ----------
+function getViewedUserId() {
+  return new URLSearchParams(window.location.search).get("user_id");
+}
+
 async function loadAllContacts(query = "") {
-  const url = query
-    ? ADMIN_BASE + "admin_contacts.php?search=" + encodeURIComponent(query)
-    : ADMIN_BASE + "admin_contacts.php";
+  const userId = getViewedUserId();
+  if (!userId) {
+    window.location.href = "admin-user-management.html";
+    return;
+  }
+
+  let url = ADMIN_BASE + "admin_contacts.php?user_id=" + encodeURIComponent(userId);
+  if (query) url += "&search=" + encodeURIComponent(query);
 
   try {
     const response = await fetch(url, {
@@ -265,6 +278,11 @@ async function loadAllContacts(query = "") {
       const data = await response.json();
       currentContacts = data.contacts; // shared with contacts.js so Edit/Delete keep working
       renderContactList(currentContacts);
+
+      const title = document.getElementById("contactsPageTitle");
+      if (title && data.owner) {
+        title.textContent = data.owner.FirstName + " " + data.owner.LastName + "'s Contacts";
+      }
     } else {
       const data = await response.json();
       showContactError(data.error || "Failed to load contacts");
@@ -278,16 +296,16 @@ async function loadAllContacts(query = "") {
 document.addEventListener("DOMContentLoaded", async function () {
   const page = document.body.dataset.page;
 
-  const allContactsBtn = document.getElementById("allContactsBtn");
-  if (allContactsBtn) {
-    allContactsBtn.addEventListener("click", function () {
-      window.location.href = "admin-contacts.html";
-    });
-  }
-
   const usersBtn = document.getElementById("usersBtn");
   if (usersBtn) {
     usersBtn.addEventListener("click", function () {
+      window.location.href = "admin-user-management.html";
+    });
+  }
+
+  const backToUsersBtn = document.getElementById("backToUsersBtn");
+  if (backToUsersBtn) {
+    backToUsersBtn.addEventListener("click", function () {
       window.location.href = "admin-user-management.html";
     });
   }

@@ -12,6 +12,23 @@ require_admin();
 $pdo = get_db_connection();
 
 $search = trim($_GET['search'] ?? '');
+$userId = (int) ($_GET['user_id'] ?? 0);
+
+$owner = null;
+
+if ($userId) {
+    $stmt = $pdo->prepare(
+        'SELECT UserID, Username, FirstName, LastName
+         FROM Users
+         WHERE UserID = ?'
+    );
+    $stmt->execute([$userId]);
+    $owner = $stmt->fetch();
+
+    if (!$owner) {
+        send_json(['error' => 'User not found'], 404);
+    }
+}
 
 $sql = '
     SELECT
@@ -40,30 +57,40 @@ $sql = '
         ON c.UserID = u.UserID
 ';
 
+$where = [];
 $params = [];
 
-if ($search !== '') {
-    $sql .= '
-        WHERE c.FirstName LIKE ?
-           OR c.LastName LIKE ?
-           OR c.Email LIKE ?
-           OR c.Phone LIKE ?
-           OR u.Username LIKE ?
-           OR u.FirstName LIKE ?
-           OR u.LastName LIKE ?
-    ';
+if ($userId) {
+    $where[] = 'c.UserID = ?';
+    $params[] = $userId;
+}
 
+if ($search !== '') {
     $like = '%' . $search . '%';
 
-    $params = [
-        $like,
-        $like,
-        $like,
-        $like,
-        $like,
-        $like,
-        $like
+    $fields = [
+        'c.FirstName',
+        'c.LastName',
+        'c.Email',
+        'c.Phone'
     ];
+
+    // Owner fields are only searched when browsing across all users
+    if (!$userId) {
+        array_push($fields, 'u.Username', 'u.FirstName', 'u.LastName');
+    }
+
+    $conditions = [];
+    foreach ($fields as $field) {
+        $conditions[] = $field . ' LIKE ?';
+        $params[] = $like;
+    }
+
+    $where[] = '(' . implode(' OR ', $conditions) . ')';
+}
+
+if ($where) {
+    $sql .= ' WHERE ' . implode(' AND ', $where);
 }
 
 $sql .= '
@@ -77,5 +104,6 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 
 send_json([
+    'owner' => $owner ?: null,
     'contacts' => $stmt->fetchAll()
 ]);
