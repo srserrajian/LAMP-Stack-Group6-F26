@@ -110,9 +110,9 @@ function renderUserRow(user) {
     <td>${user.Role === "admin" ? "Yes" : "No"}</td>
     <td>${isDisabled ? "Disabled" : "Active"}</td>
     <td>
-      <button type="button" class="btn btn-sm btn-outline-secondary contacts-btn">Contacts</button>
+      <button type="button" class="btn btn-sm contacts-btn">Contacts</button>
       <button type="button" class="btn btn-sm btn-outline-secondary details-btn">Change Password</button>
-      <button type="button" class="btn btn-sm btn-outline-danger delete-btn">${isDisabled ? "Enable" : "Disable"}</button>
+      <button type="button" class="btn btn-sm toggle-user-btn ${isDisabled ? "enable-btn" : "delete-btn"}">${isDisabled ? "Enable" : "Disable"}</button>
     </td>
   `;
 
@@ -122,7 +122,7 @@ function renderUserRow(user) {
   row.querySelector(".details-btn").addEventListener("click", function () {
     openChangePasswordModal(user.UserID);
   });
-  row.querySelector(".delete-btn").addEventListener("click", function () {
+  row.querySelector(".toggle-user-btn").addEventListener("click", function () {
     toggleUserDisabled(user.UserID, !isDisabled);
   });
 

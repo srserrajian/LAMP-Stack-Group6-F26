@@ -156,6 +156,34 @@ h3 {
     color: rgba(99, 99, 99);
 }
 
+.contacts-btn {
+    background-color: #ffffff;
+    border: 2px solid rgba(48, 119, 102);
+    color: rgba(48, 119, 102);
+    font-weight: 600;
+}
+
+.contacts-btn:hover,
+.contacts-btn:active {
+    background-color: rgba(48, 119, 102);
+    border-color: rgba(48, 119, 102);
+    color: #ffffff;
+}
+
+.enable-btn {
+    background-color: rgba(232, 232, 232);
+    border: 2px solid rgb(40, 167, 69);
+    color: rgb(30, 130, 54);
+    font-weight: 600;
+}
+
+.enable-btn:hover,
+.enable-btn:active {
+    background-color: rgb(40, 167, 69);
+    border-color: rgb(40, 167, 69);
+    color: #ffffff;
+}
+
 .logout-btn {
     background-color: rgba(232, 232, 232);
     border: 2px solid rgba(233, 82, 82);
