@@ -45,7 +45,13 @@ function require_login(): array {
 //sends 403 if not
 function require_admin(): array {
     $session = require_login();
-    if ($session['role'] !== 'admin') {
+
+    //check the database so a demoted admin loses access without logging out
+    $stmt = get_db_connection()->prepare('SELECT Role, IsDisabled FROM Users WHERE UserID = ?');
+    $stmt->execute([$session['user_id']]);
+    $user = $stmt->fetch();
+
+    if (!$user || $user['Role'] !== 'admin' || $user['IsDisabled']) {
         send_json(['error' => 'Admin access required'], 403);
     }
     return $session;

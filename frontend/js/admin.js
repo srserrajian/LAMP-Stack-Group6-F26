@@ -1,5 +1,6 @@
 // ---------- STATE ----------
 let currentUsers = [];
+let currentAdminId = null; // the logged-in admin, so they cannot change their own role
 let selectedUserId = null; // tracks which user the password modal is acting on
 
 // ---------- ERROR HELPERS ----------
@@ -104,10 +105,14 @@ function renderUserList(users) {
 function renderUserRow(user) {
   const row = document.createElement("tr");
   const isDisabled = !!user.IsDisabled;
+  const isAdmin = user.Role === "admin";
+  const isSelf = String(user.UserID) === String(currentAdminId);
 
   row.innerHTML = `
-    <td>${user.Username}<br><small>${user.FirstName} ${user.LastName}</small></td>
-    <td>${user.Role === "admin" ? "Yes" : "No"}</td>
+    <td>
+      <button type="button" class="admin-star-btn ${isAdmin ? "is-admin" : ""}" title="${isAdmin ? "Remove admin status" : "Make admin"}" ${isSelf ? "disabled" : ""}><i class="bi ${isAdmin ? "bi-star-fill" : "bi-star"}"></i></button>
+      ${user.Username}<br><small class="admin-name-indent">${user.FirstName} ${user.LastName}</small></td>
+    <td>${isAdmin ? "Yes" : "No"}</td>
     <td>${isDisabled ? "Disabled" : "Active"}</td>
     <td>
       <button type="button" class="btn btn-sm contacts-btn">Contacts</button>
@@ -116,6 +121,9 @@ function renderUserRow(user) {
     </td>
   `;
 
+  row.querySelector(".admin-star-btn").addEventListener("click", function () {
+    toggleUserAdmin(user.UserID, !isAdmin);
+  });
   row.querySelector(".contacts-btn").addEventListener("click", function () {
     window.location.href = "admin-contacts.html?user_id=" + encodeURIComponent(user.UserID);
   });
@@ -152,6 +160,34 @@ async function toggleUserDisabled(userId, disable) {
     }
   } catch (err) {
     showAdminError("Something went wrong updating this user");
+  }
+}
+
+// ---------- PROMOTE / DEMOTE ADMIN ----------
+async function toggleUserAdmin(userId, makeAdmin) {
+  const confirmed = confirm(
+    makeAdmin
+      ? "Are you sure you wish to promote this user to Admin?"
+      : "Are you sure you want to remove this user's Admin status?"
+  );
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(ADMIN_BASE + "admin_set_user_role.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ user_id: userId, is_admin: makeAdmin }),
+    });
+
+    if (response.ok) {
+      loadUsers();
+    } else {
+      const data = await response.json();
+      showAdminError(data.error || "Failed to update admin status");
+    }
+  } catch (err) {
+    showAdminError("Something went wrong updating admin status");
   }
 }
 

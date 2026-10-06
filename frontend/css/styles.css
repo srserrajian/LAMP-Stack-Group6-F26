@@ -200,6 +200,34 @@ h3 {
     color: #ffffff;
 }
 
+.admin-star-btn {
+    background: none;
+    border: none;
+    padding: 0 0.4rem 0 0;
+    font-size: 1.15rem;
+    line-height: 1;
+    vertical-align: top;
+    float: left;
+    color: rgba(150, 150, 150);
+}
+
+.admin-star-btn:hover:not(:disabled) {
+    color: rgb(255, 193, 7);
+}
+
+.admin-star-btn.is-admin {
+    color: rgb(255, 193, 7);
+}
+
+.admin-star-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.admin-name-indent {
+    display: inline-block;
+}
+
 .logout-btn {
     background-color: rgba(232, 232, 232);
     border: 2px solid rgba(233, 82, 82);
