@@ -1,5 +1,6 @@
 // ---------- STATE ----------
 let currentUsers = [];
+let currentAdminId = null; // the logged-in admin, so they cannot change their own role
 let selectedUserId = null; // tracks which user the password modal is acting on
 
 // ---------- ERROR HELPERS ----------
@@ -104,21 +105,32 @@ function renderUserList(users) {
 function renderUserRow(user) {
   const row = document.createElement("tr");
   const isDisabled = !!user.IsDisabled;
+  const isAdmin = user.Role === "admin";
+  const isSelf = String(user.UserID) === String(currentAdminId);
 
   row.innerHTML = `
-    <td>${user.Username}<br><small>${user.FirstName} ${user.LastName}</small></td>
-    <td>${user.Role === "admin" ? "Yes" : "No"}</td>
+    <td>
+      <button type="button" class="admin-star-btn ${isAdmin ? "is-admin" : ""}" title="${isAdmin ? "Remove admin status" : "Make admin"}" ${isSelf ? "disabled" : ""}><i class="bi ${isAdmin ? "bi-star-fill" : "bi-star"}"></i></button>
+      ${user.Username}<br><small class="admin-name-indent">${user.FirstName} ${user.LastName}</small></td>
+    <td>${isAdmin ? "Yes" : "No"}</td>
     <td>${isDisabled ? "Disabled" : "Active"}</td>
     <td>
+      <button type="button" class="btn btn-sm contacts-btn">Contacts</button>
       <button type="button" class="btn btn-sm btn-outline-secondary details-btn">Change Password</button>
-      <button type="button" class="btn btn-sm btn-outline-danger delete-btn">${isDisabled ? "Enable" : "Disable"}</button>
+      <button type="button" class="btn btn-sm toggle-user-btn ${isDisabled ? "enable-btn" : "disable-btn"}">${isDisabled ? "Enable" : "Disable"}</button>
     </td>
   `;
 
+  row.querySelector(".admin-star-btn").addEventListener("click", function () {
+    toggleUserAdmin(user.UserID, !isAdmin);
+  });
+  row.querySelector(".contacts-btn").addEventListener("click", function () {
+    window.location.href = "admin-contacts.html?user_id=" + encodeURIComponent(user.UserID);
+  });
   row.querySelector(".details-btn").addEventListener("click", function () {
     openChangePasswordModal(user.UserID);
   });
-  row.querySelector(".delete-btn").addEventListener("click", function () {
+  row.querySelector(".toggle-user-btn").addEventListener("click", function () {
     toggleUserDisabled(user.UserID, !isDisabled);
   });
 
@@ -148,6 +160,34 @@ async function toggleUserDisabled(userId, disable) {
     }
   } catch (err) {
     showAdminError("Something went wrong updating this user");
+  }
+}
+
+// ---------- PROMOTE / DEMOTE ADMIN ----------
+async function toggleUserAdmin(userId, makeAdmin) {
+  const confirmed = confirm(
+    makeAdmin
+      ? "Are you sure you wish to promote this user to Admin?"
+      : "Are you sure you want to remove this user's Admin status?"
+  );
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(ADMIN_BASE + "admin_set_user_role.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ user_id: userId, is_admin: makeAdmin }),
+    });
+
+    if (response.ok) {
+      loadUsers();
+    } else {
+      const data = await response.json();
+      showAdminError(data.error || "Failed to update admin status");
+    }
+  } catch (err) {
+    showAdminError("Something went wrong updating admin status");
   }
 }
 
@@ -249,11 +289,20 @@ async function submitAdminForm(event) {
   }
 }
 
-// ---------- LOAD ALL CONTACTS (admin view, with owner info) ----------
+// ---------- LOAD A USER'S CONTACTS (admin view) ----------
+function getViewedUserId() {
+  return new URLSearchParams(window.location.search).get("user_id");
+}
+
 async function loadAllContacts(query = "") {
-  const url = query
-    ? ADMIN_BASE + "admin_contacts.php?search=" + encodeURIComponent(query)
-    : ADMIN_BASE + "admin_contacts.php";
+  const userId = getViewedUserId();
+  if (!userId) {
+    window.location.href = "admin-user-management.html";
+    return;
+  }
+
+  let url = ADMIN_BASE + "admin_contacts.php?user_id=" + encodeURIComponent(userId);
+  if (query) url += "&search=" + encodeURIComponent(query);
 
   try {
     const response = await fetch(url, {
@@ -265,6 +314,11 @@ async function loadAllContacts(query = "") {
       const data = await response.json();
       currentContacts = data.contacts; // shared with contacts.js so Edit/Delete keep working
       renderContactList(currentContacts);
+
+      const title = document.getElementById("contactsPageTitle");
+      if (title && data.owner) {
+        title.textContent = data.owner.FirstName + " " + data.owner.LastName + "'s Contacts";
+      }
     } else {
       const data = await response.json();
       showContactError(data.error || "Failed to load contacts");
@@ -278,16 +332,16 @@ async function loadAllContacts(query = "") {
 document.addEventListener("DOMContentLoaded", async function () {
   const page = document.body.dataset.page;
 
-  const allContactsBtn = document.getElementById("allContactsBtn");
-  if (allContactsBtn) {
-    allContactsBtn.addEventListener("click", function () {
-      window.location.href = "admin-contacts.html";
-    });
-  }
-
   const usersBtn = document.getElementById("usersBtn");
   if (usersBtn) {
     usersBtn.addEventListener("click", function () {
+      window.location.href = "admin-user-management.html";
+    });
+  }
+
+  const backToUsersBtn = document.getElementById("backToUsersBtn");
+  if (backToUsersBtn) {
+    backToUsersBtn.addEventListener("click", function () {
       window.location.href = "admin-user-management.html";
     });
   }

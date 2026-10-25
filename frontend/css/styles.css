@@ -156,6 +156,78 @@ h3 {
     color: rgba(99, 99, 99);
 }
 
+.contacts-btn {
+    background-color: #ffffff;
+    border: 2px solid rgba(48, 119, 102);
+    color: rgba(48, 119, 102);
+    font-weight: 600;
+}
+
+.contacts-btn:hover,
+.contacts-btn:active {
+    background-color: rgba(48, 119, 102);
+    border-color: rgba(48, 119, 102);
+    color: #ffffff;
+}
+
+.disable-btn,
+.enable-btn {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.disable-btn {
+    background-color: rgb(220, 53, 69);
+    border: 2px solid rgb(220, 53, 69);
+}
+
+.disable-btn:hover,
+.disable-btn:active {
+    background-color: rgb(176, 42, 55);
+    border-color: rgb(176, 42, 55);
+    color: #ffffff;
+}
+
+.enable-btn {
+    background-color: rgb(40, 167, 69);
+    border: 2px solid rgb(40, 167, 69);
+}
+
+.enable-btn:hover,
+.enable-btn:active {
+    background-color: rgb(30, 126, 52);
+    border-color: rgb(30, 126, 52);
+    color: #ffffff;
+}
+
+.admin-star-btn {
+    background: none;
+    border: none;
+    padding: 0 0.4rem 0 0;
+    font-size: 1.15rem;
+    line-height: 1;
+    vertical-align: top;
+    float: left;
+    color: rgba(150, 150, 150);
+}
+
+.admin-star-btn:hover:not(:disabled) {
+    color: rgb(255, 193, 7);
+}
+
+.admin-star-btn.is-admin {
+    color: rgb(255, 193, 7);
+}
+
+.admin-star-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.admin-name-indent {
+    display: inline-block;
+}
+
 .logout-btn {
     background-color: rgba(232, 232, 232);
     border: 2px solid rgba(233, 82, 82);
